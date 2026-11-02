@@ -1,0 +1,15 @@
+.venv/
+.venv-airflow3/
+.airflow/
+.airflow3/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+airflow.db
+airflow.cfg
+logs/
+.DS_Store
