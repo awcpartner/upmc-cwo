@@ -161,61 +161,6 @@ The image name excludes `docker.io`. Wait until the DAG processor, triggerer,
 and worker pods are healthy. Investigate `ImagePullBackOff`, authentication
 errors, or restart loops before proceeding.
 
-## 8. Configure S3 access
-
-The worker requires:
-
-- `s3:GetObject` for the marker.
-- `s3:ListBucket` for the bucket, restricted to the marker prefix where
-  possible. This lets S3 distinguish a missing marker from access denied.
-- Existing read/write permissions for the configured Airflow task-log prefix.
-
-Example least-privilege identity policy:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "ListDemoAndLogPrefixes",
-      "Effect": "Allow",
-      "Action": [
-        "s3:ListBucket",
-        "s3:GetBucketLocation"
-      ],
-      "Resource": "arn:aws:s3:::<s3-bucket-name>",
-      "Condition": {
-        "StringLike": {
-          "s3:prefix": [
-            "demo-health-feed/inbound/*",
-            "airflow-dags/*"
-          ]
-        }
-      }
-    },
-    {
-      "Sid": "ReadDemoMarker",
-      "Effect": "Allow",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::<s3-bucket-name>/demo-health-feed/inbound/*"
-    },
-    {
-      "Sid": "ReadWriteAirflowLogs",
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:AbortMultipartUpload"
-      ],
-      "Resource": "arn:aws:s3:::<s3-bucket-name>/airflow-dags/*"
-    }
-  ]
-}
-```
-
-The IAM role permissions boundary must also allow these actions. An identity
-policy cannot exceed its boundary. If the bucket or KMS key is cross-account,
-configure the corresponding resource policies.
 
 ## 9. Configure ServiceNow
 
