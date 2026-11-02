@@ -167,18 +167,6 @@ note.
   wheel under matching Airflow constraints, confirm supported package versions,
   then rerun `airflow providers list` and `airflow dags list-import-errors`.
 
-## Production hardening
-
-- Replace Basic Authentication with OAuth and an approved Airflow secrets
-  backend; rotate credentials and enforce least-privilege incident/journal ACLs.
-- Restrict worker egress to approved ServiceNow endpoints and scan, sign,
-  promote, and retain immutable packages through the approved repository.
-- Preserve no-PHI logging: use fixed operational messages, sanitize exceptions,
-  and never log request bodies, credentials, or health data.
-- Keep retries and reconciliation bounded. Correlation lookup protects
-  sequential retries, but simultaneous writers can still race; strict
-  uniqueness requires a ServiceNow-side uniqueness rule or equivalent
-  concurrency control.
 
 For the image build, CWO form values, health checks, and rollback procedure,
 follow the [CWO custom-image guide](docs/cwo-custom-image.md). Rollback means
